@@ -15,11 +15,24 @@ int main() {
 	LinearHash testObj = LinearHash(10);
 	int insert;
 	long element;
+	long successful_searches = 0;
+	long search_costs = 0;
+
+
 	cin>>insert;
 	while(insert) {
 		cin>>element;
-		testObj.add_element(element);
-		cout<<storage_utilization(testObj)<<endl;
+		if(insert == 1) {
+			testObj.add_element(element);
+		}
+		else if(insert == 2) {
+			search_costs += testObj.find(element);
+		}
+		else if(insert == 3) {
+			cout<<double(search_costs)/successful_searches<<endl;
+			successful_searches = 0;
+			search_costs = 0;
+		}
 		cin>>insert;
 	}
 	return 0;

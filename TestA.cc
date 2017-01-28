@@ -13,13 +13,21 @@ double storage_utilization(LinearHash obj) {
 
 int main() {
 	LinearHash testObj = LinearHash(10);
-	int insert;
+	char insert;
 	long element;
+	long counter=0;
+
 	cin>>insert;
-	while(insert) {
-		cin>>element;
-		testObj.add_element(element);
-		cout<<storage_utilization(testObj)<<endl;
+	while(insert!='0') {
+		if(insert=='p') {
+			testObj.printTable();
+		}
+		else {
+			cin>>element;
+			counter = 0;
+			testObj.add_element(element);
+			cout<<storage_utilization(testObj)<<endl;
+		}
 		cin>>insert;
 	}
 	return 0;

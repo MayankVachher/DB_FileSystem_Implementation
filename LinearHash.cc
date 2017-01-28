@@ -9,9 +9,11 @@ class LinearHash
 	long num_records;
 	long bkt_size;
 
-	void splitBucket() {
+	long splitBucket() {
 		long currBase = table[nextSplit].get_base();
 		long toSetBase = currBase*2;
+
+		long cost = table[nextSplit].get_num_buckets();
 
 		std::vector<long> toRefactor = table[nextSplit].initate_refactor();
 		table[nextSplit].set_base(toSetBase);
@@ -22,6 +24,8 @@ class LinearHash
 			long loc = toRefactor[i] % toSetBase;
 			table[loc].addData(toRefactor[i]);
 		}
+
+		return cost + toRefactor.size();
 	}
 
 public:
@@ -44,16 +48,17 @@ public:
 		table.push_back(directory(bkt_size, 2));
 	}
 
-	void add_element(long data) {
+	long add_element(long data) {
 		long location = data % table[nextSplit].get_base();
 
 		if(location < nextSplit) {
 			location = data % table[nextSplit-1].get_base();
 		}
 		table[location].addData(data);
+		num_records++;
 
 		if(table[location].hasOverflow()) {
-			splitBucket();
+			long accesses = splitBucket();
 
 			if(
 				(nextSplit == table.size()-1) || 
@@ -63,9 +68,10 @@ public:
 			else {
 				nextSplit += 1;
 			}
+			return accesses;
 		}
 
-		num_records++;
+		return 0;
 	}
 
 	bool find(long element) {
@@ -100,5 +106,9 @@ public:
 			num_buckets += table[i].get_num_buckets();
 		}
 		return num_buckets;
+	}
+
+	long get_bucket_capacity() {
+		return bkt_size;
 	}
 };
