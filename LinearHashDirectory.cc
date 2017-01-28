@@ -37,7 +37,7 @@ public:
 	std::vector<long> initate_refactor() {
 		std::vector<long> store;
 		std::vector<long> retrieved;
-		for(int i = 0; i<buckets.size(); i++) {
+		for(long i = 0; i<buckets.size(); i++) {
 			retrieved = buckets[i].get_data();
 			store.insert(store.end(), retrieved.begin(), retrieved.end());
 		}
@@ -57,7 +57,7 @@ public:
 		}
 		cout<<")";
 
-		for(int i=1; i<buckets.size(); i++) {
+		for(long i=1; i<buckets.size(); i++) {
 			cout<<", ";
 			std::vector<long> retrieved = buckets[i].get_data();
 			cout<<"["<<retrieved[0];
@@ -82,14 +82,21 @@ public:
 		buckets[buckets.size()-1].addData(element);
 	}
 
-	bool find(long element) {
+	long find(long element) {
 		if(data_present) {
-			for(int i=0; i<buckets.size(); i++) {
+			for(long i=0; i<buckets.size(); i++) {
 				if(buckets[i].find(element)) {
-					return true;
+					return i+1;
 				}
 			}
 		}
-		return false;
+		return -1;
+	}
+
+	long get_num_buckets() {
+		if(!data_present) {
+			return 1;
+		}
+		return buckets.size();
 	}
 };

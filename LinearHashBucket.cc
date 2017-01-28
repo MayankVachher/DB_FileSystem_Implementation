@@ -40,7 +40,7 @@ public:
 	}
 
 	bool find(long element) {
-		for(int i=0; i<data.size(); i++) {
+		for(long i=0; i<data.size(); i++) {
 			if(data[i] == element) {
 				return true;
 			}

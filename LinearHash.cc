@@ -8,7 +8,6 @@ class LinearHash
 	long nextSplit;
 	long num_records;
 	long bkt_size;
-	long num_directory;
 
 	void splitBucket() {
 		long currBase = table[nextSplit].get_base();
@@ -30,8 +29,16 @@ public:
 	LinearHash() {
 		nextSplit = 0;
 		num_records = 0;
-		num_directory = 0;
 		bkt_size = 1;
+		
+		table.push_back(directory(bkt_size, 2));
+		table.push_back(directory(bkt_size, 2));
+	}
+
+	LinearHash(long bucket_size) {
+		nextSplit = 0;
+		num_records = 0;
+		bkt_size = bucket_size;
 		
 		table.push_back(directory(bkt_size, 2));
 		table.push_back(directory(bkt_size, 2));
@@ -39,7 +46,12 @@ public:
 
 	void add_element(long data) {
 		long location = data % table[nextSplit].get_base();
+
+		if(location < nextSplit) {
+			location = data % table[nextSplit-1].get_base();
+		}
 		table[location].addData(data);
+
 		if(table[location].hasOverflow()) {
 			splitBucket();
 
@@ -66,7 +78,7 @@ public:
 
 	void printTable() {
 		for(long i=0; i<table.size(); i++) {
-			cout<<i<<" --- ";
+			cout<<i<<" --- Mod "<< table[i].get_base()<<" --- ";
 			if(table[i].hasData()) {
 				table[i].printData();
 			}
@@ -76,5 +88,17 @@ public:
 			cout<<"\n";
 		}
 		cout<<"\n\n";
+	}
+
+	long get_num_records() {
+		return num_records;
+	}
+
+	long get_num_buckets() {
+		long num_buckets = 0;
+		for(long i=0; i<table.size(); i++) {
+			num_buckets += table[i].get_num_buckets();
+		}
+		return num_buckets;
 	}
 };
