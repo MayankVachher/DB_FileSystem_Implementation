@@ -1,11 +1,14 @@
-#include "LinearHashBucket.cc"
+#include "LinearHashDirectory.cc"
 
 using namespace std;
 
 class LinearHash
 {
-	std::vector<bucket> table;
-	int nextSplit;
+	std::vector<directory> table;
+	long nextSplit;
+	long num_records;
+	long bkt_size;
+	long num_directory;
 
 	void splitBucket() {
 		long currBase = table[nextSplit].get_base();
@@ -14,7 +17,7 @@ class LinearHash
 		std::vector<long> toRefactor = table[nextSplit].initate_refactor();
 		table[nextSplit].set_base(toSetBase);
 
-		table.push_back(bucket(toSetBase));
+		table.push_back(directory(bkt_size, toSetBase));
 
 		for(long i = 0; i < toRefactor.size(); i++) {
 			long loc = toRefactor[i] % toSetBase;
@@ -25,9 +28,13 @@ class LinearHash
 public:
 
 	LinearHash() {
-		table.push_back(bucket(2));
-		table.push_back(bucket(2));
 		nextSplit = 0;
+		num_records = 0;
+		num_directory = 0;
+		bkt_size = 1;
+		
+		table.push_back(directory(bkt_size, 2));
+		table.push_back(directory(bkt_size, 2));
 	}
 
 	void add_element(long data) {
@@ -45,13 +52,16 @@ public:
 				nextSplit += 1;
 			}
 		}
+
+		num_records++;
 	}
 
 	bool find(long element) {
-		loc = element % table[nextSplit].get_base();
-		if(loc<nextSplit) {
-			loc = element % table[nextSplit-1].get_base();
-		return table[loc].find(element);
+		long location = element % table[nextSplit].get_base();
+		if(location<nextSplit) {
+			location = element % table[nextSplit-1].get_base();
+		}
+		return table[location].find(element);
 	}
 
 	void printTable() {
