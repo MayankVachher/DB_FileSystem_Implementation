@@ -13,22 +13,24 @@ double storage_utilization(LinearHash obj) {
 
 int main() {
 	LinearHash testObj = LinearHash(10);
-	int insert;
+	char insert;
 	long element;
 	long successful_searches = 0;
 	long search_costs = 0;
 
 
 	cin>>insert;
-	while(insert) {
-		cin>>element;
-		if(insert == 1) {
+	while(insert!='0') {
+		if(insert == 'i') {
+			cin>>element;
 			testObj.add_element(element);
 		}
-		else if(insert == 2) {
+		else if(insert == 's') {
+			cin>>element;
 			search_costs += testObj.find(element);
+			successful_searches += 1;
 		}
-		else if(insert == 3) {
+		else if(insert == 'c') {
 			cout<<double(search_costs)/successful_searches<<endl;
 			successful_searches = 0;
 			search_costs = 0;
